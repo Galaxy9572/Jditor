@@ -34,6 +34,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.ljy.common.MyMouseAdapter;
 import org.ljy.common.MyWindowAdapter;
+import org.ljy.domain.ConfigBean;
 import org.ljy.util.IOUtils;
 import org.ljy.util.SundriesUtils;
 
@@ -44,6 +45,8 @@ public class MyEditor extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private static MyEditor edp = new MyEditor();
 	private static final JFileChooser jfc = new JFileChooser();
+	private static FileNameExtensionFilter txtFilter, edtFilter, javaFilter;
+	private ConfigBean configBean;
 	private JMenuBar jmb;// 菜单条
 	private JMenu jmFile, jmEdit, jmHelp;// 菜单
 	private JMenuItem jmtAbout, jmtFiles[], jmtEdits[];// 菜单项
@@ -52,7 +55,7 @@ public class MyEditor extends JFrame implements ActionListener {
 	private JTextArea jta;// 文本域
 	private JPopupMenu popMenu;// 弹出式菜单
 	private JComboBox<String> jcbFont, jcbSize;// 组合框
-	private JButton fontColor, clearAll;// 按钮
+	private JButton jb_fontColor, jb_clearAll;// 按钮
 	private Color color;// 颜色
 	private JLabel jlFont, jlSize, jlStyle, jlColor, jlStastic;// 标签
 	private Font font;
@@ -64,21 +67,40 @@ public class MyEditor extends JFrame implements ActionListener {
 	private int stastic;
 	private long fileSize;
 	private boolean isSaved = false, isUpdated = false;
-	private static FileNameExtensionFilter txtFilter, edtFilter, javaFilter;
+	private int fontSize;//字体大小
+	private int[] fontColor;//字体颜色
+	private int fontStyle;//字体风格：粗体、斜体、正常
+	private boolean lineWrap;//自动换行
 
-	// 构造函数
+	/**
+	 * 构造方法
+	 */
 	private MyEditor() {
 		super("MyEditor");// 设置窗口标题
 		dim = this.getToolkit().getScreenSize();// 获取屏幕分辨率
 		this.setSize(dim.width * 2 / 3, dim.height * 2 / 3);// 设置窗口大小
 		SundriesUtils.setFont();// 把各组件的字体设置为menufont
 		this.initComponents();
+		this.initDefaultConfig();
 		this.addListeners();
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
 
+	private void initDefaultConfig(){
+		configBean=new ConfigBean();
+		fontSize=configBean.getFontSize();//字体大小
+		fontColor=configBean.getFontColor();//字体颜色
+		fontStyle=configBean.getFontStyle();//字体风格：粗体、斜体、正常
+		lineWrap=configBean.getLineWrap();//自动换行
+		Color color=new Color(fontColor[0],fontColor[1],fontColor[2]);
+		jta.setForeground(color);
+		jlColor.setForeground(color);
+		jta.setLineWrap(lineWrap);
+		jta.setFont(new Font("微软雅黑", Font.PLAIN, fontSize));
+	}
+	
 	/**
 	 * 初始化主界面
 	 */
@@ -167,26 +189,26 @@ public class MyEditor extends JFrame implements ActionListener {
 
 		// 创建面板3
 		p3 = new JPanel();
-		fontColor = new JButton("字体颜色");
+		jb_fontColor = new JButton("字体颜色");
 		jcbBold = new JCheckBox("粗体");
 		jcbItalic = new JCheckBox("斜体");
 		jlStyle = new JLabel(" 字型 :");
 		jlColor = new JLabel("▇ ");
-		clearAll = new JButton("清空文本");
+		jb_clearAll = new JButton("清空文本");
 		p3.setOpaque(false);// 设置面板为透明
 		jcbItalic.setOpaque(false);
 		jcbBold.setOpaque(false);
-		fontColor.setForeground(color);
+		jb_fontColor.setForeground(color);
 
 		jcbBold.addActionListener(this);
 		jcbItalic.addActionListener(this);
 
-		p3.add(fontColor);
+		p3.add(jb_fontColor);
 		p3.add(jlColor);
 		p3.add(jlStyle);
 		p3.add(jcbBold);
 		p3.add(jcbItalic);
-		p3.add(clearAll);
+		p3.add(jb_clearAll);
 		jtb.add(p3);
 		this.getContentPane().add(jtb, "North");// 把JToolBar添加到面板的北边
 
@@ -235,18 +257,18 @@ public class MyEditor extends JFrame implements ActionListener {
 				}
 			}
 		});
-		fontColor.addActionListener(new ActionListener() {
+		jb_fontColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == fontColor) {// 设置字体颜色事件
+				if (e.getSource() == jb_fontColor) {// 设置字体颜色事件
 					color = JColorChooser.showDialog(null, "选择字体颜色", color);
 					jta.setForeground(color);// 设置文本域的颜色
 					jlColor.setForeground(color);// 显示字体的颜色
 				}
 			}
 		});
-		clearAll.addActionListener(new ActionListener() {
+		jb_clearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == jmtEdits[5] || e.getSource() == clearAll) {// "清空"事件
+				if (e.getSource() == jmtEdits[5] || e.getSource() == jb_clearAll) {// "清空"事件
 					jta.setText("");
 				}
 			}
