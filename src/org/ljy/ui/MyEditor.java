@@ -80,6 +80,10 @@ public class MyEditor extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
+	
+	/**
+	 * 初始化主界面
+	 */
 	private void initComponents() {
 		jmb = new JMenuBar();
 		this.setJMenuBar(jmb);
@@ -171,7 +175,7 @@ public class MyEditor extends JFrame implements ActionListener {
 		jcbBold = new JCheckBox("粗体");
 		jcbItalic = new JCheckBox("斜体");
 		jlStyle = new JLabel(" 字型 :");
-		jlColor = new JLabel("▇▇ ");
+		jlColor = new JLabel("▇ ");
 		clearAll = new JButton("清空文本");
 		p3.setOpaque(false);// 设置面板为透明
 		jcbItalic.setOpaque(false);
@@ -212,7 +216,11 @@ public class MyEditor extends JFrame implements ActionListener {
 		this.getContentPane().add(new JScrollPane(jta));// 添加带滚动条的JTextArea
 		
 	}
-
+	
+	
+	/**
+	 * 添加监听器
+	 */
 	private void addListeners() {
 		// 给菜单项添加ActionListener监听器
 		jmtLinewrap.addActionListener(new ActionListener() {
@@ -320,7 +328,9 @@ public class MyEditor extends JFrame implements ActionListener {
 		});
 	}
 
-	// ActionListener事件
+	/** 
+	 * ActionListener事件
+	 */
 	public void actionPerformed(ActionEvent e) {
 		String fontName = jcbFont.getSelectedItem().toString();
 		int size = Integer.parseInt(jcbSize.getSelectedItem().toString());
