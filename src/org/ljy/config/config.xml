@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config>
-	<font-size>16</font-size>
-	<font-color>0,0,0</font-color>
-	<font-style>1</font-style>
-	<line-wrap>true</line-wrap>
+
+<config> 
+  <font-size>16</font-size>  
+  <font-color>6,199,42</font-color>  
+  <font-style>1</font-style>  
+  <line-wrap>true</line-wrap> 
 </config>

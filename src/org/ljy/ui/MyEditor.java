@@ -263,6 +263,8 @@ public class MyEditor extends JFrame implements ActionListener {
 					color = JColorChooser.showDialog(null, "选择字体颜色", color);
 					jta.setForeground(color);// 设置文本域的颜色
 					jlColor.setForeground(color);// 显示字体的颜色
+					int[] fontColor={color.getRed(),color.getGreen(),color.getBlue()};
+					configBean.setFontColor(fontColor);
 				}
 			}
 		});

@@ -9,7 +9,6 @@ import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.junit.Test;
 
 /**
  * 与config.xml对应的JavaBean
@@ -31,21 +30,25 @@ public class ConfigBean {
 	public void setFontSize(int fontSize) {
 		Node node=document.selectSingleNode("//font-size");
 		node.setText(fontSize+"");
+		writeToConfig();
 	}
 
 	public void setFontColor(int[] fontColor) {
 		Node node=document.selectSingleNode("//font-color");
 		node.setText(fontColor[0]+","+fontColor[1]+","+fontColor[2]);
+		writeToConfig();
 	}
 
 	public void setFontStyle(int fontStyle) {
 		Node node=document.selectSingleNode("//font-style");
 		node.setText(fontStyle+"");
+		writeToConfig();
 	}
 
 	public void setLineWrap(boolean isLineWrap) {
 		Node node=document.selectSingleNode("//line-wrap");
 		node.setText(isLineWrap+"");
+		writeToConfig();
 	}
 
 	public int getFontSize() {
@@ -59,8 +62,6 @@ public class ConfigBean {
 		int[] fontColor=new int[3];
 		for (int i = 0; i < color.length; i++) {
 			fontColor[i]=Integer.parseInt(color[i]);
-//			System.out.println(color[i]);
-//			System.out.println(fontColor[i]);
 		}
 		return fontColor;
 	}
@@ -79,9 +80,9 @@ public class ConfigBean {
 	}
 	
 	public void writeToConfig(){
-		OutputFormat format=OutputFormat.createPrettyPrint();
 		try {
-			XMLWriter writer=new XMLWriter(new FileWriter(CONFIG_PATH),format);
+			OutputFormat format=OutputFormat.createPrettyPrint();
+			XMLWriter writer = new XMLWriter(new FileWriter(CONFIG_PATH),format);
 			writer.write(document);
 			writer.close();
 		} catch (IOException e) {
