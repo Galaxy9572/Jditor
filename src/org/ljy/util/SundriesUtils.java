@@ -11,7 +11,7 @@ import javax.swing.UIManager;
 
 import org.ljy.ui.MyEditor;
 
-public class Tools {
+public class SundriesUtils {
 	private static Font menufont = new Font("΢���ź�", Font.PLAIN, 14);// UI����
 	private static String time;
 	private static MyEditor edp = MyEditor.getInstance();

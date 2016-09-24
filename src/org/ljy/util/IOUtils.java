@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 
 import org.ljy.ui.MyEditor;
 
-public class IOTools {
-	private static IOTools iot=new IOTools();
+public class IOUtils {
+	private static IOUtils iot=new IOUtils();
 	private FileOutputStream fos;//文件输出流
 	private OutputStreamWriter osr;
 	private FileInputStream fis;//文件输入流
@@ -131,7 +131,7 @@ public class IOTools {
 		return fos;
 	}
 
-	public static IOTools getInstance(){
+	public static IOUtils getInstance(){
 		return iot;
 	}
 }

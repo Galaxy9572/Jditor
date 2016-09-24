@@ -1,4 +1,5 @@
 package org.ljy.ui;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -8,9 +9,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -33,18 +32,18 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.ljy.util.IOTools;
-import org.ljy.util.Tools;
+import org.ljy.common.MyMouseAdapter;
+import org.ljy.common.MyWindowAdapter;
+import org.ljy.util.IOUtils;
+import org.ljy.util.SundriesUtils;
 
 public class MyEditor extends JFrame implements ActionListener {
 	/**
-	 * @author LJY
-	 * 已知BUG：换行有问题
-	 * 待完成：文件加密模块
+	 * @author LJY 已知BUG：换行有问题 待完成：文件加密模块
 	 */
 	private static final long serialVersionUID = 1L;
-	private static MyEditor edp=new MyEditor();
-	private static final JFileChooser jfc =new JFileChooser();
+	private static MyEditor edp = new MyEditor();
+	private static final JFileChooser jfc = new JFileChooser();
 	private JMenuBar jmb;// 菜单条
 	private JMenu jmFile, jmEdit, jmHelp;// 菜单
 	private JMenuItem jmtAbout, jmtFiles[], jmtEdits[];// 菜单项
@@ -65,14 +64,14 @@ public class MyEditor extends JFrame implements ActionListener {
 	private int stastic;
 	private long fileSize;
 	private boolean isSaved = false, isUpdated = false;
-	private static FileNameExtensionFilter txtFilter,edtFilter,javaFilter;
+	private static FileNameExtensionFilter txtFilter, edtFilter, javaFilter;
 
 	// 构造函数
 	private MyEditor() {
-		super("Edit++");// 设置窗口标题
+		super("MyEditor");// 设置窗口标题
 		dim = this.getToolkit().getScreenSize();// 获取屏幕分辨率
 		this.setSize(dim.width * 2 / 3, dim.height * 2 / 3);// 设置窗口大小
-		Tools.setFont();// 把各组件的字体设置为menufont
+		SundriesUtils.setFont();// 把各组件的字体设置为menufont
 		this.initComponents();
 		this.addListeners();
 		this.setLocationRelativeTo(null);
@@ -80,7 +79,6 @@ public class MyEditor extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
-	
 	/**
 	 * 初始化主界面
 	 */
@@ -103,8 +101,7 @@ public class MyEditor extends JFrame implements ActionListener {
 			}
 		}
 		jmtFiles[2].setEnabled(false);
-		String[] jmeditStr = { "撤销", "剪切 ", "复制 ", "粘贴 ",
-				"时间", "清空文本", "查找" };
+		String[] jmeditStr = { "撤销", "剪切 ", "复制 ", "粘贴 ", "时间", "清空文本", "查找" };
 		jmtEdits = new JMenuItem[jmeditStr.length];
 		for (int i = 0; i < jmeditStr.length; i++) {
 			jmtEdits[i] = new JMenuItem(jmeditStr[i]);
@@ -132,15 +129,14 @@ public class MyEditor extends JFrame implements ActionListener {
 		jta = new JTextArea();
 		jta.setFont(new Font("微软雅黑", Font.PLAIN, 16));// 设置初始字体
 		font = jta.getFont();
-		
+
 		// 创建面板1
-		p1=new JPanel();
-		GraphicsEnvironment ge = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();// 获取本地绘图环境
+		p1 = new JPanel();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();// 获取本地绘图环境
 		String[] fontsName = ge.getAvailableFontFamilyNames();// 获取系统中的字体
 		jcbFont = new JComboBox<String>(fontsName);
 		for (int i = 0; i < fontsName.length; i++) {
-			if(fontsName[i].equals("宋体")){
+			if (fontsName[i].equals("宋体")) {
 				jcbFont.setSelectedIndex(i);
 				break;
 			}
@@ -181,10 +177,10 @@ public class MyEditor extends JFrame implements ActionListener {
 		jcbItalic.setOpaque(false);
 		jcbBold.setOpaque(false);
 		fontColor.setForeground(color);
-		
+
 		jcbBold.addActionListener(this);
 		jcbItalic.addActionListener(this);
-		
+
 		p3.add(fontColor);
 		p3.add(jlColor);
 		p3.add(jlStyle);
@@ -195,7 +191,7 @@ public class MyEditor extends JFrame implements ActionListener {
 		this.getContentPane().add(jtb, "North");// 把JToolBar添加到面板的北边
 
 		// 创建统计字数和文件大小的JLabel
-		jlStastic = new JLabel("字数：" + stastic +" "+"文件大小："+fileSize+" B");
+		jlStastic = new JLabel("字数：" + stastic + " " + "文件大小：" + fileSize + " B");
 		jlStastic.setBackground(Color.WHITE);
 		jlStastic.setOpaque(true);
 		this.getContentPane().add(jlStastic, "South");
@@ -214,10 +210,9 @@ public class MyEditor extends JFrame implements ActionListener {
 		}
 		jta.add(popMenu);
 		this.getContentPane().add(new JScrollPane(jta));// 添加带滚动条的JTextArea
-		
+
 	}
-	
-	
+
 	/**
 	 * 添加监听器
 	 */
@@ -235,16 +230,15 @@ public class MyEditor extends JFrame implements ActionListener {
 		jmtAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == jmtAbout) {// “关于”信息
-					JOptionPane.showMessageDialog(null,
-							"MyEditor\n版本：1.0 \n设计：LJY",
-							"关于", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "MyEditor\n版本：1.0 \n设计：LJY", "关于",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
 		fontColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == fontColor) {// 设置字体颜色事件
-					color = JColorChooser.showDialog(null, "选择字体颜色",color);
+					color = JColorChooser.showDialog(null, "选择字体颜色", color);
 					jta.setForeground(color);// 设置文本域的颜色
 					jlColor.setForeground(color);// 显示字体的颜色
 				}
@@ -257,8 +251,7 @@ public class MyEditor extends JFrame implements ActionListener {
 				}
 			}
 		});
-		jta.addMouseListener(new MouseListener() {
-			// 鼠标单击事件
+		jta.addMouseListener(new MyMouseAdapter(){
 			public void mouseClicked(MouseEvent e) {
 				if (e.getModifiers() == MouseEvent.BUTTON3_MASK) {
 					popMenu.show(jta, e.getX(), e.getY());// 鼠标右键在文本域中单击，弹出菜单
@@ -272,63 +265,37 @@ public class MyEditor extends JFrame implements ActionListener {
 			public void mouseExited(MouseEvent e) {
 				MyEditor.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));// 设置鼠标样式为默认样式
 			}
-
-			public void mouseReleased(MouseEvent e) {
-			}
-
-			public void mousePressed(MouseEvent e) {
-			}
 		});
 		jta.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent e) {
 				isUpdated = true;
-				stastic = Tools.replaceBlank(jta.getText());// 除去空格和换行符都计数
+				stastic = SundriesUtils.replaceBlank(jta.getText());// 除去空格和换行符都计数
 				try {
-					fileSize=jfc.getSelectedFile().length();//TODO:编写文本时不能获得文件大小
+					fileSize = jfc.getSelectedFile().length();// TODO:编写文本时不能获得文件大小
 				} catch (Exception e1) {
 				}
-				jlStastic.setText("字数：" + stastic+" "+"文件大小："+fileSize+" B");
+				jlStastic.setText("字数：" + stastic + " " + "文件大小：" + fileSize + " B");
 			}
 		});
-		this.addWindowListener(new WindowListener() {
+		this.addWindowListener(new MyWindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (isSaved == false && isUpdated) {
-					if (JOptionPane.showConfirmDialog(MyEditor.this,
-							"文件尚未保存，需要保存吗？", "提示", JOptionPane.YES_NO_OPTION,
+					if (JOptionPane.showConfirmDialog(MyEditor.this, "文件尚未保存，需要保存吗？", "提示", JOptionPane.YES_NO_OPTION,
 							JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
-						IOTools.getInstance().saveFileAs();
+						IOUtils.getInstance().saveFileAs();
 					}
 				}
-				if (JOptionPane.showConfirmDialog(null,
-						"确定要提出Edit++吗？", "退出", JOptionPane.YES_NO_OPTION,
+				if (JOptionPane.showConfirmDialog(null, "确定要提出MyEditor吗？", "退出", JOptionPane.YES_NO_OPTION,
 						JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
 					System.exit(0);
 				} else {
 					MyEditor.this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 				}
 			}
-
-			public void windowOpened(WindowEvent e) {
-			}
-
-			public void windowClosed(WindowEvent e) {
-			}
-
-			public void windowIconified(WindowEvent e) {
-			}
-
-			public void windowDeiconified(WindowEvent e) {
-			}
-
-			public void windowActivated(WindowEvent e) {
-			}
-
-			public void windowDeactivated(WindowEvent e) {
-			}
 		});
 	}
 
-	/** 
+	/**
 	 * ActionListener事件
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -343,27 +310,26 @@ public class MyEditor extends JFrame implements ActionListener {
 		}
 		jta.setFont(new Font(fontName, style, size));
 		if (e.getSource() == jmtFiles[0]) {// “新建”事件
-			IOTools.getInstance().newFile(path);
+			IOUtils.getInstance().newFile(path);
 		}
 		if (e.getSource() == jmtFiles[1]) {// “打开”事件
-			IOTools.getInstance().openFile();
+			IOUtils.getInstance().openFile();
 		}
 		if (e.getSource() == jmtFiles[2]) {// "保存“事件
-			IOTools.getInstance().saveFile(path);
+			IOUtils.getInstance().saveFile(path);
 		}
 		if (e.getSource() == jmtFiles[3]) {// "另存为“事件
-			IOTools.getInstance().saveFileAs();
+			IOUtils.getInstance().saveFileAs();
 		}
 		if (e.getSource() == jmtFiles[4]) {// “退出”事件
 			if (isSaved == false && isUpdated) {
-				if (JOptionPane.showConfirmDialog(this, "文件尚未保存，需要保存吗？", "提示",
-						JOptionPane.YES_NO_OPTION,
+				if (JOptionPane.showConfirmDialog(this, "文件尚未保存，需要保存吗？", "提示", JOptionPane.YES_NO_OPTION,
 						JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
-					IOTools.getInstance().saveFileAs();
+					IOUtils.getInstance().saveFileAs();
 				}
 			}
-			if (JOptionPane.showConfirmDialog(this, "确定要提出Edit++吗？", "退出",
-					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(this, "确定要提出Edit++吗？", "退出", JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
 				System.exit(0);
 			}
 		}
@@ -371,7 +337,7 @@ public class MyEditor extends JFrame implements ActionListener {
 			// TODO
 		}
 		if (e.getSource() == jmtEdits[4]) {// "时间“事件
-			Tools.setTime();
+			SundriesUtils.setTime();
 		}
 		if (e.getSource() == jmtEdits[6]) {// "查找"事件
 			WordSearch.getInstance();
@@ -395,30 +361,30 @@ public class MyEditor extends JFrame implements ActionListener {
 	public void setJta(String jta) {
 		this.jta.setText(jta);
 	}
-	
-	public static MyEditor getInstance(){
+
+	public static MyEditor getInstance() {
 		return edp;
 	}
-	
+
 	public void setIsSaved(boolean isSaved) {
 		this.isSaved = isSaved;
 	}
 
 	public static JFileChooser getJfc() {
-		txtFilter = new FileNameExtensionFilter(  "txt(文本文件)", "txt");
-		edtFilter = new FileNameExtensionFilter(  "edt(加密的文本文件)",  "edt");
-		javaFilter = new FileNameExtensionFilter(  "java(Java源代码)",  "java");
+		txtFilter = new FileNameExtensionFilter("txt(文本文件)", "txt");
+		edtFilter = new FileNameExtensionFilter("edt(加密的文本文件)", "edt");
+		javaFilter = new FileNameExtensionFilter("java(Java源代码)", "java");
 		jfc.setFileFilter(javaFilter);
 		jfc.setFileFilter(edtFilter);
 		jfc.setFileFilter(txtFilter);
 		jfc.setAcceptAllFileFilterUsed(false);
 		return jfc;
 	}
-	
+
 	public JMenuItem getJmtFiles(int i) {
 		return jmtFiles[i];
 	}
-	
+
 	public static FileNameExtensionFilter getTxtFilter() {
 		return txtFilter;
 	}
