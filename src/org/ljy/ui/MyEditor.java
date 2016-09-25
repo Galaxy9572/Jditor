@@ -45,7 +45,7 @@ public class MyEditor extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private static MyEditor edp = new MyEditor();
 	private static final JFileChooser jfc = new JFileChooser();
-	private static FileNameExtensionFilter txtFilter, edtFilter, javaFilter;
+	private static FileNameExtensionFilter txtFilter, edtFilter, javaFilter,xmlFilter;
 	private ConfigBean configBean;
 	private JMenuBar jmb;// 菜单条
 	private JMenu jmFile, jmEdit, jmHelp;// 菜单
@@ -264,8 +264,10 @@ public class MyEditor extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				if (jmtLinewrap.isSelected()) {
 					jta.setLineWrap(true);// 设置为自动换行
+					configBean.setLineWrap(true);
 				} else {
 					jta.setLineWrap(false);// 设置为不自动换行
+					configBean.setLineWrap(false);
 				}
 			}
 		});
@@ -435,8 +437,10 @@ public class MyEditor extends JFrame implements ActionListener {
 		txtFilter = new FileNameExtensionFilter("txt(文本文件)", "txt");
 		edtFilter = new FileNameExtensionFilter("edt(加密的文本文件)", "edt");
 		javaFilter = new FileNameExtensionFilter("java(Java源代码)", "java");
-		jfc.setFileFilter(javaFilter);
+		xmlFilter = new FileNameExtensionFilter("xml(扩展标记语言)", "xml");
 		jfc.setFileFilter(edtFilter);
+		jfc.setFileFilter(javaFilter);
+		jfc.setFileFilter(xmlFilter);
 		jfc.setFileFilter(txtFilter);
 		jfc.setAcceptAllFileFilterUsed(false);
 		return jfc;

@@ -2,7 +2,7 @@
 
 <config> 
   <font-size>20</font-size>  
-  <font-color>6,199,42</font-color>  
+  <font-color>153,255,51</font-color>  
   <font-style>1,1</font-style>  
-  <line-wrap>true</line-wrap> 
+  <line-wrap>false</line-wrap> 
 </config>
