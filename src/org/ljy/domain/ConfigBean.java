@@ -16,7 +16,7 @@ import org.dom4j.io.XMLWriter;
  *
  */
 public class ConfigBean {
-	private final String CONFIG_PATH = "src/org/ljy/config/config.xml";
+	private final String CONFIG_PATH ="src/org/ljy/config/config.xml";
 	private Document document;
 
 	public ConfigBean() {
@@ -39,9 +39,9 @@ public class ConfigBean {
 		writeToConfig();
 	}
 
-	public void setFontStyle(int fontStyle) {
+	public void setFontStyle(int[] fontStyle) {
 		Node node=document.selectSingleNode("//font-style");
-		node.setText(fontStyle+"");
+		node.setText(fontStyle[0]+","+fontStyle[1]);
 		writeToConfig();
 	}
 
@@ -66,9 +66,10 @@ public class ConfigBean {
 		return fontColor;
 	}
 
-	public int getFontStyle() {
+	public int[] getFontStyle() {
 		Node node=document.selectSingleNode("//font-style");
-		return Integer.parseInt(node.getText());
+		String[] arr= node.getText().split(",");
+		return new int[]{Integer.parseInt(arr[0]),Integer.parseInt(arr[1])};
 	}
 
 	public boolean getLineWrap() {

@@ -69,8 +69,9 @@ public class MyEditor extends JFrame implements ActionListener {
 	private boolean isSaved = false, isUpdated = false;
 	private int fontSize;//字体大小
 	private int[] fontColor;//字体颜色
-	private int fontStyle;//字体风格：粗体、斜体、正常
+	private int[] fontStyle;//字体风格：粗体、斜体、正常
 	private boolean lineWrap;//自动换行
+	private int style;
 
 	/**
 	 * 构造方法
@@ -94,11 +95,31 @@ public class MyEditor extends JFrame implements ActionListener {
 		fontColor=configBean.getFontColor();//字体颜色
 		fontStyle=configBean.getFontStyle();//字体风格：粗体、斜体、正常
 		lineWrap=configBean.getLineWrap();//自动换行
+		style = font.getStyle();
 		Color color=new Color(fontColor[0],fontColor[1],fontColor[2]);
 		jta.setForeground(color);
 		jlColor.setForeground(color);
 		jta.setLineWrap(lineWrap);
-		jta.setFont(new Font("微软雅黑", Font.PLAIN, fontSize));
+		if(fontStyle[0]==0 && fontStyle[1]==0){
+			jcbBold.setSelected(false);
+			jcbItalic.setSelected(false);
+			style=0;
+		}else if(fontStyle[0]==1 && fontStyle[1]==0){
+			jcbBold.setSelected(true);
+			jcbItalic.setSelected(false);
+			style=2;
+		}else if(fontStyle[0]==0 && fontStyle[1]==1){
+			jcbBold.setSelected(false);
+			jcbItalic.setSelected(true);
+			style=1;
+		}else if(fontStyle[0]==1 && fontStyle[1]==1){
+			jcbBold.setSelected(true);
+			jcbItalic.setSelected(true);
+			style=3;
+		}
+		jta.setFont(new Font("微软雅黑",style, fontSize));
+		jcbSize.setSelectedIndex(fontSize-1);
+		jmtLinewrap.setSelected(lineWrap);
 	}
 	
 	/**
@@ -149,7 +170,6 @@ public class MyEditor extends JFrame implements ActionListener {
 
 		// 创建JTextArea
 		jta = new JTextArea();
-		jta.setFont(new Font("微软雅黑", Font.PLAIN, 16));// 设置初始字体
 		font = jta.getFont();
 
 		// 创建面板1
@@ -172,12 +192,12 @@ public class MyEditor extends JFrame implements ActionListener {
 
 		// 创建面板2
 		p2 = new JPanel();
-		String sizeStr[] = new String[60];
+		String sizeStrs[] = new String[60];
 		for (int i = 0; i < 60; i++) {
-			sizeStr[i] = String.valueOf(i + 1);
+			sizeStrs[i] = String.valueOf(i + 1);
 		}
 		jlSize = new JLabel(" 字号:");
-		jcbSize = new JComboBox<String>(sizeStr);
+		jcbSize = new JComboBox<String>(sizeStrs);
 		p2.setOpaque(false);
 		p2.add(jlSize);
 		jcbSize.setEditable(false);
@@ -325,12 +345,29 @@ public class MyEditor extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String fontName = jcbFont.getSelectedItem().toString();
 		int size = Integer.parseInt(jcbSize.getSelectedItem().toString());
-		int style = font.getStyle();// 获取字体风格
-		if (jcbBold.isSelected()) {
-			style ^= 1;// 只改倒数第一个二进制位即表示是否粗体的数据信息
+		if (jcbBold.isSelected() && (!jcbItalic.isSelected())) {
+			fontStyle[0] = 1;
+			fontStyle[1]=0;
+			style = 2;
+			configBean.setFontStyle(fontStyle);
 		}
-		if (jcbItalic.isSelected()) {
-			style ^= 2;// 只改倒数第二个二进制位即表示是否斜体的数据信息
+		if(jcbBold.isSelected() && jcbItalic.isSelected()){
+			fontStyle[0] = 1;
+			fontStyle[1]=1;
+			style = 3;
+			configBean.setFontStyle(fontStyle);
+		}
+		if ((!jcbBold.isSelected()) && jcbItalic.isSelected()) {
+			fontStyle[0] = 0;
+			fontStyle[1]=1;
+			style = 1;
+			configBean.setFontStyle(fontStyle);
+		}
+		if((!jcbBold.isSelected()) && (!jcbItalic.isSelected())){
+			fontStyle[0] = 0;
+			fontStyle[1]=0;
+			style = 0;
+			configBean.setFontStyle(fontStyle);
 		}
 		jta.setFont(new Font(fontName, style, size));
 		if (e.getSource() == jmtFiles[0]) {// “新建”事件
