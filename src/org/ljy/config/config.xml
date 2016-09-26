@@ -3,6 +3,6 @@
 <config> 
   <font-size>20</font-size>  
   <font-color>153,255,51</font-color>  
-  <font-style>1,1</font-style>  
+  <font-style>0,0</font-style>  
   <line-wrap>false</line-wrap> 
 </config>

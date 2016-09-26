@@ -1,5 +1,6 @@
 package org.ljy.domain;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -16,11 +17,12 @@ import org.dom4j.io.XMLWriter;
  *
  */
 public class ConfigBean {
-	private final String CONFIG_PATH ="src/org/ljy/config/config.xml";
+	private final String CONFIG_PATH="src/org/ljy/config/config.xml";
 	private Document document;
 
 	public ConfigBean() {
 		try {
+			System.out.println(CONFIG_PATH);
 			document=new SAXReader().read(CONFIG_PATH);
 		} catch (DocumentException e) {
 			e.printStackTrace();
